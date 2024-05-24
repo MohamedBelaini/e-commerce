@@ -1,0 +1,175 @@
+
+    .container {
+        background-color: var(--bgSoft);
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+      }
+      
+      .form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      
+     
+      .form textarea,
+      .form select {
+        padding: 20px;
+        background-color: var(--bg);
+        color: var(--text);
+        border: 2px solid #2e374a;
+        border-radius: 5px;
+        margin-bottom: 30px;
+        outline: none;
+      }
+      
+      .form input, .form select {
+        width: 45%;
+        
+      }
+      
+      .form textarea{
+        width: 100%;
+      }
+      
+      .form button{
+        width: 100%;
+        padding: 20px;
+        background-color: var(--bg-btn);
+        color: var(--text);
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .form .titleIn {
+        padding: 20px;
+        background-color: var(--bg);
+        color: var(--text);
+        border: 2px solid #2e374a;
+        border-radius: 5px;
+        margin-bottom: 30px;
+        width: 100%;
+        outline: none;
+      }
+      .colors, .sizeContainer {
+        padding: 20px;
+        border: 2px solid #2e374a;
+        border-radius: 5px;
+        margin-bottom: 30px;
+        outline: none;
+        height: fit-content; 
+        width: 100%;
+        background-color: var(--bg);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      } 
+      .addColor {
+        width: 100%;
+      }
+      .colors input {
+        border: none;
+        width: 100%;
+        height: 50px;
+        background-color: var(--bg);
+      }
+      .colors button {
+        background-color: var(--bg-btn);
+        width: 100%;
+        height: 20px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .colors .newColors {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+      }
+      .form .prixIn{
+        padding: 20px;
+        background-color: var(--bg);
+        color: var(--text);
+        border: 2px solid #2e374a;
+        border-radius: 5px;
+        margin-bottom: 30px;
+        width: 100%;
+        outline: none;
+      }
+      .form .stockIn{
+        padding: 20px;
+        background-color: var(--bg);
+        color: var(--text);
+        border: 2px solid #2e374a;
+        border-radius: 5px;
+        margin-bottom: 30px;
+        width: 100%;
+        outline: none;
+      }
+      .form .sizeIn{
+        padding: 20px;
+        background-color: var(--bg);
+        color: var(--text);
+        border: 2px solid #2e374a;
+        border-radius: 5px;
+        margin-bottom: 30px;
+        outline: none;
+        width: 100%;
+      }
+      .catego {
+        color: var(--text);
+        border: 2px solid #2e374a;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 20px;
+        width: 100%;
+        margin-bottom: 30px;
+        background-color: var(--bg);
+      }
+      .catego .catIn {
+        width: 100%;
+        height: 50px;
+        background-color: var(--bg);
+        color: #fff;
+        padding: 20px;
+        border: 2px solid #2e374a;
+        outline: none;
+      }
+      .catego button {
+        background-color: var(--bg-btn);
+        width: 100%;
+        height: 20px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .catego select {
+        width: 100%;
+        height: 30px;
+      }
+      .sizeContainer input{
+        width: 100%;
+        height: 50px;
+        background-color: var(--bg);
+        color: #fff;
+        padding: 20px;
+        border: 2px solid #2e374a;
+        outline: none;
+      }
+      .sizeContainer button {
+        background-color: var(--bg-btn);
+        width: 100%;
+        height: 20px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+
+      

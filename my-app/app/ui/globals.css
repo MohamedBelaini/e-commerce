@@ -1,0 +1,21 @@
+:root {
+    --bgSoft: #181B1E;
+    --bg: #131618;
+    --text: #fff;
+    --textSoft: #8D98A5;
+    --transition: 0.1s;
+    --border-radios: 10px;
+    --bg-btn: blueviolet;
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    background: var(--bg);
+    color: var(--text);
+}
+a {
+    text-decoration: none;
+}
