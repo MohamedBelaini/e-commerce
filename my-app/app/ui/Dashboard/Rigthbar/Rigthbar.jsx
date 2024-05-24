@@ -11,36 +11,35 @@ export default function Rigthbar() {
         <Image className={styles.bg} src={image} alt="" fill />
       </div>
       <div className={styles.text}>
-        <span className={styles.notification}>🔥 Available Now</span>
+        <span className={styles.notification}>🔥 Disponibile ora</span>
         <h3 className={styles.title}>
-          How to use the new version of the admin dashboard?
+        Come utilizzare la nuova versione del dashboard di amministrazione?
         </h3>
-        <span className={styles.subtitle}>Takes 4 minutes to learn</span>
+        <span className={styles.subtitle}>Ci vogliono 4 minuti per imparare</span>
         <p className={styles.desc}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
           Reprehenderit eius libero perspiciatis recusandae possimus.
         </p>
         <button className={styles.button}>
           <MdPlayCircleFilled />
-          Watch
+          Vedi
         </button>
       </div>
     </div>
     <div className={styles.item}>
       <div className={styles.text}>
-        <span className={styles.notification}>🚀 Coming Soon</span>
+        <span className={styles.notification}>🚀 Prossimamente</span>
         <h3 className={styles.title}>
-          New server actions are available, partial pre-rendering is coming
-          up!
+        Sono disponibili nuove azioni del server, è in arrivo il pre-rendering parzialesu!
         </h3>
-        <span className={styles.subtitle}>Boost your productivity</span>
+        <span className={styles.subtitle}>Aumenta la tua produttività</span>
         <p className={styles.desc}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
           Reprehenderit eius libero perspiciatis recusandae possimus.
         </p>
         <button className={styles.button}>
           <MdReadMore />
-          Learn
+          Scopri
         </button>
       </div>
     </div>

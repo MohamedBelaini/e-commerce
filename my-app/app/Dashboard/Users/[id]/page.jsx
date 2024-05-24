@@ -30,11 +30,7 @@ const SingleUserPage = ({ params }) => {
       await updateUser(id, {
         username: e.target.username.value,
         email: e.target.email.value,
-        password: e.target.password.value,
-        phone: e.target.phone.value,
-        address: e.target.address.value,
-        isAdmin: e.target.isAdmin.value === 'true',
-        isActive: e.target.isActive.value === 'true',
+        password: e.target.password.value,  
       });
       console.log('User updated successfully!');
       router.push('/dashboard/users');
@@ -48,13 +44,13 @@ const SingleUserPage = ({ params }) => {
       {user ? (
         <>
           <div className={styles.infoContainer}>
-            <h2>{user.fullName}</h2>
+            <h2>{user.username}</h2>
           </div>
           <div className={styles.formContainer}>
             <form onSubmit={handleFormSubmit} className={styles.form}>
               <input type="hidden" name="id" value={user.id} />
               <label>Username</label>
-              <input type="text" name="username" defaultValue={user.fullName} />
+              <input type="text" name="username" defaultValue={user.username} />
               <label>Email</label>
               <input type="email" name="email" defaultValue={user.email} />
               <label>Password</label>

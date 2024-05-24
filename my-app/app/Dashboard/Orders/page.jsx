@@ -1,4 +1,4 @@
-'use client';
+"use client"
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
@@ -9,41 +9,41 @@ import Image from 'next/image';
 import Pagination from '../../ui/Dashboard/Pagination/Pagination';
 
 export default function Prodect() {
-  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchOrders = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'products'));
-        const productsData = [];
+        const querySnapshot = await getDocs(collection(db, 'orders'));
+        const ordersData = [];
         querySnapshot.forEach((doc) => {
-          productsData.push({ id: doc.id, ...doc.data() });
+          ordersData.push({ id: doc.id, ...doc.data() });
         });
-        setProducts(productsData);
+        setOrders(ordersData);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching orders:', error);
       }
     };
 
-    fetchProducts();
+    fetchOrders();
   }, []);
 
-  const deleteProduct = async (productId) => {
+  const deleteOrder = async (orderId) => {
     try {
-      await deleteDoc(doc(db, 'products', productId));
-      setProducts(products.filter(product => product.id !== productId));
-      console.log('Product deleted successfully!');
+      await deleteDoc(doc(db, 'orders', orderId));
+      setOrders(orders.filter(order => order.id !== orderId));
+      console.log('Order deleted successfully!');
     } catch (error) {
-      alert('Error deleting product');
-      console.error('Error deleting product:', error);
+      alert('Error deleting order');
+      console.error('Error deleting order:', error);
     }
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.top}>
-        <Search placeholder="Search for a product..." />
-        <Link href="/Dashboard/Prodect/Add">
+        <Search placeholder="Search for an order..." />
+        <Link href="/Dashboard/Orders/Add">
           <button className={styles.addButton}>Add New</button>
         </Link>
       </div>
@@ -51,23 +51,22 @@ export default function Prodect() {
         <thead>
           <tr>
             <td></td>
-            <td>fullName</td>
             <td>Title</td>
             <td>Description</td>
-            <td>quantity</td>
+            <td>Quantity</td>
             <td>Price</td>
-            <td>time</td>
-            <td>date</td>
-            <td>action</td>
+            <td>Time</td>
+            <td>Date</td>
+            <td>Action</td>
           </tr>
         </thead>
         <tbody>
-          {products.map((product) => (
-            <tr key={product.id}>
+          {orders.map((order) => (
+            <tr key={order.id}>
               <td>
                 <div className={styles.product}>
                   <Image
-                    src={product.image || "/noproduct.jpg"}
+                    src={order.image || "/noproduct.jpg"}
                     alt=""
                     width={40}
                     height={40}
@@ -75,21 +74,20 @@ export default function Prodect() {
                   />
                 </div>
               </td>
-              <td>fullName</td>
-              <td>{product.title}</td>
-              <td>{product.description}</td>
-              <td>quantity</td>
-              <td>${product.price}</td>
-              <td>time</td>
-              <td>date</td>
+              <td>{order.title}</td>
+              <td>{order.description}</td>
+              <td>{order.quantity}</td>
+              <td>${order.price}</td>
+              <td>{order.time}</td>
+              <td>{order.date}</td>
               <td>
                 <div className={styles.buttons}>
-                  <Link href={`/Dashboard/Prodect/${product.id}`}>
+                  <Link href={`/Dashboard/Orders/${order.id}`}>
                     <button className={`${styles.button} ${styles.view}`}>
                       View
                     </button>
                   </Link>
-                  <form onSubmit={(e) => { e.preventDefault(); deleteProduct(product.id); }}>
+                  <form onSubmit={(e) => { e.preventDefault(); deleteOrder(order.id); }}>
                     <button type="submit" className={`${styles.button} ${styles.delete}`}>
                       Delete
                     </button>

@@ -1,5 +1,6 @@
 // actions.js
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 
 export const fetchProduct = async (productId) => {
@@ -64,3 +65,28 @@ export const updateUser = async (id, userData) => {
   }
 };
 
+
+export const fetchOrders = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'orders'));
+    const orders = [];
+    querySnapshot.forEach((doc) => {
+      orders.push({ id: doc.id, ...doc.data() });
+    });
+    return orders;
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    throw error; 
+  }
+};
+
+export const updateOrder = async (orderId, updatedData) => {
+  try {
+    const orderRef = doc(db, 'orders', orderId);
+    await updateDoc(orderRef, updatedData);
+    console.log('Order updated successfully!');
+  } catch (error) {
+    console.error('Error updating order:', error);
+    throw error; 
+  }
+};

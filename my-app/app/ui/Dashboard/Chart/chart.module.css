@@ -3,10 +3,12 @@
     background-color: var(--bgSoft);
     padding: 20px;
     border-radius: var(--border-radios);
+    height: 600px;
   }
   
   .title{
     font-weight: 200;
     color: var(--textSoft);
     margin-bottom: 20px;
+    padding: 20px;
   }

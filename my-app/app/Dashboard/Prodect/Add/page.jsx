@@ -1,29 +1,21 @@
-'use client'
-import styles from '../../../ui/Dashboard/Prodects/addProdects/addProdects.module.css'
-import { db, storage } from '../../../firebaseConfig'
-import { addDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+"use client";
+// Import necessary Firebase functions
+import { db } from '../../../firebaseConfig';
+import { collection, doc, setDoc, getDocs, deleteDoc, addDoc } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import React, { useState, useEffect } from 'react';
+import styles from '../../../ui/Dashboard/Prodects/addProdects/addProdects.module.css';
 
 export default function AddProdect() {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState([]);
-  const [prix, setPrix] = useState('');
+  const [price, setPrix] = useState('');
   const [stock, setStock] = useState('');
-  const [color, setColor] = useState([]);
-  const [size, setSize] = useState([]);
+  const [colors, setColor] = useState([]);
+  const [sizes, setSize] = useState([]);
   const [description, setDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [image, setImage] = useState(null); 
-
-  let date;
-  const handlDate = () => {
-    date = new Date();
-  }
-  
-  const handleCategorySelect = (e) => {
-    setSelectedCategory(e.target.value);
-  };
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     const GetCategoryData = async () => {
@@ -39,44 +31,55 @@ export default function AddProdect() {
       }
     };
     GetCategoryData();
-  }, [date]); 
+  }, []);
 
-  const AddDataProdect = async (event) => {
-    event.preventDefault();
-    
-    let imageURL = '';
+  const handleCategorySelect = (e) => {
+    setSelectedCategory(e.target.value);
+  };
 
-    if (image && image.name) {
-      const storageRef = ref(storage, `images/${image.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, image);
-
-      await new Promise((resolve, reject) => {
-        uploadTask.on(
-          'state_changed',
-          null,
-          (error) => {
-            console.error('Error uploading image:', error);
-            alert('Error uploading image');
-            reject(error);
-          },
-          async () => {
-            imageURL = await getDownloadURL(uploadTask.snapshot.ref);
-            resolve();
-          }
-        );
-      });
+  const uploadImage = async () => {
+    if (!image) {
+      return null;
     }
 
     try {
-      await addDoc(collection(db, 'products'), {
+      const storage = getStorage();
+      const storageRef = ref(storage, `images/${image.name}`);
+      const snapshot = await uploadBytes(storageRef, image);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      return downloadURL;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('Error uploading image');
+      return null;
+    }
+  };
+
+  const AddDataProdect = async (event) => {
+    event.preventDefault();
+    const downloadURL = await uploadImage();
+    if (downloadURL) {
+      await saveProduct(downloadURL);
+    }
+  };
+
+  const saveProduct = async (downloadURL) => {
+    try {
+      const productRef = doc(collection(db, 'products'));
+      const productId = productRef.id; 
+      const prixFloat = parseFloat(price);
+      const stockFloat = parseFloat(stock);
+
+      await setDoc(productRef, {
+        id: productId, 
         title,
-        category,
-        prix,
-        stock,
-        color,
-        size,
+        category: selectedCategory,
+        price: prixFloat,
+        stock: stockFloat,
+        colors,
+        sizes,
         description,
-        imageURL,
+        image: downloadURL,
       });
       setTitle('');
       setCategory([]);
@@ -84,31 +87,30 @@ export default function AddProdect() {
       setStock('');
       setColor([]);
       setSize([]);
-      setDescription(''); 
+      setDescription('');
       setImage(null);
       alert('Add Product is success!');
     } catch (error) {
       console.error('Error adding product:', error);
       alert('Error adding product');
     }
-  }
+  };
 
   const handleAddColor = (event) => {
     const newColor = event.target.previousElementSibling.value;
-    if (newColor && !color.includes(newColor)) {
-      setColor([...color, newColor]);
+    if (newColor && !colors.includes(newColor)) {
+      setColor([...colors, newColor]);
     }
-  }
+  };
 
-  const handlDelteColore = (index) => {
-    const newColors = color.filter((_, i) => i !== index);
+  const handleDeleteColor = (index) => {
+    const newColors = colors.filter((_, i) => i !== index);
     setColor(newColors);
-  }
+  };
 
   const handleAddCategory = async (event) => {
     const newCategory = event.target.previousElementSibling.value;
     if (newCategory && !category.includes(newCategory)) {
-      setCategory([...category, newCategory]);
       try {
         await addDoc(collection(db, 'Categorys'), {
           category: newCategory,
@@ -121,7 +123,7 @@ export default function AddProdect() {
       }
     }
     event.target.previousElementSibling.value = '';
-  }
+  };
 
   const handleDeleteCategory = async () => {
     try {
@@ -142,79 +144,120 @@ export default function AddProdect() {
 
   const handleAddSize = (event) => {
     const newSize = event.target.previousElementSibling.value.toUpperCase();
-    if (newSize && !size.includes(newSize)) {
-      setSize([...size, newSize]);
+    if (newSize && !sizes.includes(newSize)) {
+      setSize([...sizes, newSize]);
     }
     event.target.previousElementSibling.value = '';
-  }
+  };
 
-  const handlDelteSize = (index) => {
-    const newSizes = size.filter((_, i) => i !== index);
+  const handleDeleteSize = (index) => {
+    const newSizes = sizes.filter((_, i) => i !== index);
     setSize(newSizes);
-  }
+  };
 
   const handleImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       setImage(event.target.files[0]);
     }
-  }
+  };
 
   return (
-    <div className={styles.container} onLoad={handlDate}>
+    <div className={styles.container}>
       <form className={styles.form} onSubmit={AddDataProdect}>
-        <input className={styles.titleIn} type="text" placeholder="Title" name="title" value={title} required onChange={(e) => { setTitle(e.target.value) }} />
+        <input
+          className={styles.titleIn}
+          type="text"
+          placeholder="Title"
+          name="title"
+          value={title}
+          required
+          onChange={(e) => setTitle(e.target.value)}
+        />
         <div className={styles.catego}>
-          <input className={styles.catIn} type="text" placeholder="Add new Category" name="title" />
+          <input className={styles.catIn} type="text" placeholder="Add new Category" name="category" />
           <button type="button" onClick={handleAddCategory}>Add Category</button>
           <button type="button" onClick={handleDeleteCategory}>Delete Category</button>
           <select
-              className={styles.catContainer}
-              name="cat"
-              id="cat"
-              value={selectedCategory}
-              onChange={handleCategorySelect}
-          > 
-              {Array.isArray(category) &&
-                  category.map((category, index) => (
-                  <option key={index} value={category}>
-                      {category}            
-                  </option>
+            className={styles.catContainer}
+            name="cat"
+            id="cat"
+            value={selectedCategory}
+            onChange={handleCategorySelect}
+          >
+            {Array.isArray(category) &&
+              category.map((category, index) => (
+                <option key={index} value={category}>
+                  {category}
+                </option>
               ))}
           </select>
         </div>
-        <input className={styles.prixIn} type="number" placeholder="Price" value={prix} name="price" required onChange={(e) => { setPrix(e.target.value) }} />
-        <input className={styles.stockIn} type="number" placeholder="Stock" value={stock} name="stock" required onChange={(e) => { setStock(e.target.value) }} />
+        <input
+          className={styles.prixIn}
+          type="number"
+          placeholder="Price"
+          value={price}
+          name="price"
+          required
+          onChange={(e) => setPrix(e.target.value)}
+        />
+        <input
+          className={styles.stockIn}
+          type="number"
+          placeholder="Stock"
+          value={stock}
+          name="stock"
+          required
+          onChange={(e) => setStock(e.target.value)}
+        />
         <div className={styles.colors}>
           <input type="color" placeholder="Color" name="color" />
-          <button type='button' onClick={handleAddColor}>Add Color</button>
+          <button type="button" onClick={handleAddColor}>Add Color</button>
           <div className={styles.newColors}>
-            {Array.isArray(color) && color.map((color, index) => (
-              <div className={styles.colorsBtn} key={index}>
-                <span
-                  style={{ backgroundColor: color, height: '40px', display: 'inline-block', width: '20%', borderRadius:"10px" }}
-                ></span>
-                <button onClick={() => { handlDelteColore(index) }} type='button'>Delete</button>
-              </div>
-            ))}
+            {Array.isArray(colors) &&
+              colors.map((color, index) => (
+                <div className={styles.colorsBtn} key={index}>
+                  <span
+                    style={{ backgroundColor: color, height: '40px', display: 'inline-block', width: '20%', borderRadius: '10px' }}
+                  ></span>
+                  <button onClick={() => handleDeleteColor(index)} type="button">Delete</button>
+                </div>
+              ))}
           </div>
         </div>
         <div className={styles.sizeContainer}>
           <input className={styles.sizeIn} type="text" placeholder="Size" name="size" />
-          <button className={styles.addSize} type='button' onClick={handleAddSize}>Add Size</button>
+          <button className={styles.addSize} type="button" onClick={handleAddSize}>Add Size</button>
           <div className={styles.sizeContent}>
-            {Array.isArray(size) && size.map((size, index) => (
-              <div className={styles.sizeBtn} key={index}>
-                <p style={{border: '1px solid #000',display: 'flex',justifyContent:'center', backgroundColor: '#000', width: '20%', alignItems: 'center', height: '40px', borderRadius:"10px" }}>{size}</p>
-                <button className={styles.btns} onClick={() => { handlDelteSize(index) }} type='button'>Delete</button>
-              </div>
-            ))}
+            {Array.isArray(sizes) &&
+              sizes.map((size, index) => (
+                <div className={styles.sizeBtn} key={index}>
+                  <p
+                    style={{
+                      border: '1px solid #000',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      backgroundColor: '#000',
+                      width: '20%',
+                      alignItems: 'center',
+                      height: '40px',
+                      borderRadius: '10px',
+                      color: '#fff',
+                    }}
+                  >
+                    {size}
+                  </p>
+                  <button className={styles.btns} onClick={() => handleDeleteSize(index)} type="button">Delete</button>
+                </div>
+              ))}
           </div>
         </div>
         <div className={styles.imageUploadContainer}>
           <input
             type="file"
             accept="image/*"
-            onChange={handleImageChange}
+            onChange={handleImageChange} 
+            required
           />
           {image && (
             <div>
@@ -229,61 +272,15 @@ export default function AddProdect() {
           )}
         </div>
         <textarea
+          className={styles.textarea}
+          placeholder="Description"
+          name="description"
           value={description}
           required
-          name="desc"
-          id="desc"
-          rows="16"
-          placeholder="Description"
-          onChange={(e) => { setDescription(e.target.value) }}
-        ></textarea>
-        <button type="submit">Submit</button>
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <button className={styles.addProd} type="submit">Add Product</button>
       </form>
     </div>
-  )
+  );
 }
-
-
-
-               
-
-
-
-/* <div className={styles.imageUploadContainer}>
-<h4>Add Image: </h4>
-<input
-  type="file"
-  accept="image/*"
-  onChange={handleImageUpload}
-  placeholder='Add'
-/>
-{imageUpload && (
-  <div>
-    <img
-      src={URL.createObjectURL(imageUpload)}
-      alt="Preview"
-      className={styles.imagePreview}
-    />
-    <p>File name: {imageUpload.name}</p>
-    <p>File size: {(imageUpload.size / 1024 / 1024).toFixed(2)} MB</p>
-  </div>
-)}
-</div>
- const handleImageUpload = (event) => {
-  const file = event.target.files[0];
-  setImageUpload(file);
-};
-const [imageUpload, setImageUpload] = useState(null);
-imageURL: downloadURL,  */
-// const handleDeleteCategory = async (categoryId) => {
-//   try {
-//     await deleteDoc(doc(db, 'Categorys', categoryId));
-//     setCategoriesData(categoriesData.filter((category) => category.id !== categoryId));
-//     alert('Category deleted successfully');
-//   } catch (error) {
-//     console.error('Error deleting category:', error);
-//     alert('Error deleting category');
-//   }
-// };
-
- 
