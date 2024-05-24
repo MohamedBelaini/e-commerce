@@ -51,11 +51,14 @@ export default function Prodect() {
         <thead>
           <tr>
             <td></td>
+            <td>fullName</td>
             <td>Title</td>
             <td>Description</td>
+            <td>quantity</td>
             <td>Price</td>
-            <td>Stock</td>
-            <td>Action</td>
+            <td>time</td>
+            <td>date</td>
+            <td>action</td>
           </tr>
         </thead>
         <tbody>
@@ -72,10 +75,13 @@ export default function Prodect() {
                   />
                 </div>
               </td>
-              <td> {product.title}</td>
+              <td>fullName</td>
+              <td>{product.title}</td>
               <td>{product.description}</td>
+              <td>quantity</td>
               <td>${product.price}</td>
-              <td>{product.stock}</td>
+              <td>time</td>
+              <td>date</td>
               <td>
                 <div className={styles.buttons}>
                   <Link href={`/Dashboard/Prodect/${product.id}`}>

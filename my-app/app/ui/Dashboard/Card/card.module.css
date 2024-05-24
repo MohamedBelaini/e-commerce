@@ -6,9 +6,10 @@
     gap: 20px;
     cursor: pointer;
     transition: var(--transition);
+    width: 32%;
 }
 .container:hover {
-    background: var(--bg-btn);
+    background: var(--bg);
 }
 .texts {
     display: flex;

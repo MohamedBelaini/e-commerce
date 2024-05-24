@@ -1,8 +1,9 @@
-
+"use client";
 import MenuLink from './menuLink/menuLink';
 import styles from './sidebar.module.css'
 import Image from 'next/image';
 import ImageUser from '../../../../public/image/userImage.png'
+import { useRouter } from 'next/navigation';
 import {
   MdDashboard,
   MdSupervisedUserCircle,
@@ -36,51 +37,43 @@ const menuItems = [
         icon: <MdShoppingBag />,
       },
       {
-        title: "Transactions",
-        path: "/Dashboard/Transactions",
+        title: "Orders",
+        path: "/Dashboard/Orders",
         icon: <MdAttachMoney />,
       },
     ],
   },
-  {
-    title: "Analytics",
-    list: [
-      {
-        title: "Revenue",
-        path: "/Dashboard/Revenue",
-        icon: <MdWork />,
-      },
-      {
-        title: "Reports",
-        path: "/Dashboard/Reports",
-        icon: <MdAnalytics />,
-      },
-      {
-        title: "Teams",
-        path: "/Dashboard/Teams",
-        icon: <MdPeople />,
-      },
-    ],
-  },
-  {
-    title: "User",
-    list: [
-      {
-        title: "Settings",
-        path: "/Dashboard/Settings",
-        icon: <MdOutlineSettings />,
-      },
-      {
-        title: "Help",
-        path: "/Dashboard/Help",
-        icon: <MdHelpCenter />,
-      },
-    ],
-  },
+  // {
+  //   title: "Analytics",
+  //   list: [
+  //     {
+  //       title: "Revenue",
+  //       path: "/Dashboard/Revenue",
+  //       icon: <MdWork />,
+  //     },
+  //     {
+  //       title: "Reports",
+  //       path: "/Dashboard/Reports",
+  //       icon: <MdAnalytics />,
+  //     },
+  //     {
+  //       title: "Teams",
+  //       path: "/Dashboard/Teams",
+  //       icon: <MdPeople />,
+  //     },
+  //   ],
+  // },
 ];
 
 
 export default function Sidebar() {
+
+  const router = useRouter();
+
+  const handlReturn = () => {
+      router.replace('/');
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.user}>
@@ -107,7 +100,7 @@ export default function Sidebar() {
           </li>
           )}
       </ul>
-      <button className={styles.logout}>
+      <button onClick={handlReturn} className={styles.logout}>
       <MdLogout />
         Logout
       </button>

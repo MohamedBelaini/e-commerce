@@ -1,45 +1,72 @@
+// SingleUserPage.jsx
+"use client"
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { fetchUser, updateUser } from '../../../actions';
+import styles from '../../../ui/Dashboard/users/SingleUser/SingleUser.module.css';
+import Image from 'next/image';
+import imageUser from '../../../../public/image/userImage.png';
 
-import styles from "../../../ui/Dashboard/users/SingleUser/SingleUser.module.css";
-import Image from "next/image";
-import imageUser from '../../../../public/image/userImage.png'
+const SingleUserPage = ({ params }) => {
+  const router = useRouter();
+  const { id } = params;
+  const [user, setUser] = useState(null);
 
-const SingleUserPage = async ({ params }) => {
-  
-  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const fetchedUser = await fetchUser(id);
+        setUser(fetchedUser);
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    };
+    fetchData();
+  }, [id]);
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await updateUser(id, {
+        username: e.target.username.value,
+        email: e.target.email.value,
+        password: e.target.password.value,
+        phone: e.target.phone.value,
+        address: e.target.address.value,
+        isAdmin: e.target.isAdmin.value === 'true',
+        isActive: e.target.isActive.value === 'true',
+      });
+      console.log('User updated successfully!');
+      router.push('/dashboard/users');
+    } catch (error) {
+      console.error('Error updating user:', error);
+    }
+  };
+
   return (
     <div className={styles.container}>
-      <div className={styles.infoContainer}>
-        <div className={styles.imgContainer}>
-          <Image src={imageUser} alt="" fill />
-        </div>
-        soufiane
-      </div>
-      <div className={styles.formContainer}>
-        <form  className={styles.form}>
-          <input type="hidden" name="id" />
-          <label>Username</label>
-          <input type="text" name="username" placeholder="User name" />
-          <label>Email</label>
-          <input type="email" name="email" placeholder='Email' />
-          <label>Password</label>
-          <input type="password" name="password" />
-          <label>Phone</label>
-          <input type="text" name="phone" placeholder="User Phone" />
-          <label>Address</label>
-          <textarea type="text" name="address" placeholder="Address" />
-          <label>Is Admin?</label>
-          <select name="isAdmin" id="isAdmin">
-            <option value={true} >Yes</option>
-            <option value={false} >No</option>
-          </select>
-          <label>Is Active?</label>
-          <select name="isActive" id="isActive">
-            <option value={true} >Yes</option>
-            <option value={false} >No</option>
-          </select>
-          <button>Update</button>
-        </form>
-      </div>
+      {user ? (
+        <>
+          <div className={styles.infoContainer}>
+            <h2>{user.fullName}</h2>
+          </div>
+          <div className={styles.formContainer}>
+            <form onSubmit={handleFormSubmit} className={styles.form}>
+              <input type="hidden" name="id" value={user.id} />
+              <label>Username</label>
+              <input type="text" name="username" defaultValue={user.fullName} />
+              <label>Email</label>
+              <input type="email" name="email" defaultValue={user.email} />
+              <label>Password</label>
+              <input type="password" name="password" defaultValue={user.password}/>
+              <label>userId</label>
+              <input type="text" name="userId" defaultValue={user.userId} />
+            </form>
+          </div>
+        </>
+      ) : (
+        <div>Loading...</div>
+      )}
     </div>
   );
 };
